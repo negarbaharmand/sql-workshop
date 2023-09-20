@@ -129,6 +129,7 @@ WHERE city.countrycode = (
 
 
 # 18: What are the names of the capital cities in countries in the same region as the city named Yaren
+-- solution 1:
 select country.name as capital_city, country.region as country_region 
 from country
 join city on country.capital = city.id
@@ -142,10 +143,27 @@ where country.region = (
     )
 );
 
-select region from country;
+-- solution 2:
+select * from city where id in
+(select capital from country where region = 
+(select region from country where capital = 
+(select id from city where name = "Yaren")));
+
 
 # 19: What unique languages are spoken in the countries in the same region as the city named Riga
+-- solution 1:
+select distinct countrylanguage.language
+from countrylanguage
+join country on countrylanguage.countrycode = country.code
+join city on country.capital = city.id
+where city.name = "Riga";
+
+-- solution 2:
+select distinct language from countrylanguage where countrycode in
+(select code from country where region = 
+(select region from country where code = 
+(select countrycode from city where name = "Riga")));
 
 
 # 20: Get the name of the most populous city
-#
+select name from city where population = (select max(population) from city);
