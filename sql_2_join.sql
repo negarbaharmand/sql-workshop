@@ -100,33 +100,52 @@ JOIN City AS selected_city ON City.CountryCode = selected_city.CountryCode
 WHERE selected_city.Population = 122199;
 
 
-#
+
 # 16: What names of the cities are in the same country as the city with a population of 122199 (excluding the that city itself)
 SELECT City.Name AS CityName, City.CountryCode AS CountryCode, city.population AS Population
 FROM City
 JOIN City AS selected_city ON City.CountryCode = selected_city.CountryCode
 WHERE selected_city.Population = 122199
 and city.population != 122199;
-#
-#
+
+
 # 17: What are the city names in the country where Luanda is capital?
-SELECT city.Name AS CityName, country.name, Country.capital
-FROM City 
-JOIN Country ON country.Code =  city.CountryCode 
-WHERE country.Capital = 'London';
-SELECT capital
-FROM country;
+
+SELECT name, countrycode
+FROM city
+WHERE city.countrycode = (
+    SELECT code
+    FROM country
+    WHERE country.capital = (
+        SELECT id
+        FROM city
+        WHERE city.name = 'Luanda'
+    )
+);
 
 
 
 
-#
-#
+
+
 # 18: What are the names of the capital cities in countries in the same region as the city named Yaren
-#
-#
+select country.name as capital_city, country.region as country_region 
+from country
+join city on country.capital = city.id
+where country.region = (
+    select region
+    from country
+    where code = (
+        select countrycode
+        from city
+        where name = 'Yaren'
+    )
+);
+
+select region from country;
+
 # 19: What unique languages are spoken in the countries in the same region as the city named Riga
-#
-#
+
+
 # 20: Get the name of the most populous city
 #
